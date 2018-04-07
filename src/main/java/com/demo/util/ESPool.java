@@ -23,6 +23,7 @@ public class ESPool {
     private static Logger log = Logger.getLogger(ESPool.class);
 
     public synchronized  static TransportClient getConnect(){
+        log.info("-------- 开始连接ES， ip："+IP+" port："+PORT+" cluster："+CLUSTER_NAME+" --------");
         Settings settings = Settings.builder()
                 .put("cluster.name", CLUSTER_NAME)
                 .put("client.transport.sniff", true) //自动嗅探整个集群的状态，把集群中其他ES节点的ip添加到本地的客户端列表中
