@@ -190,5 +190,46 @@ public class ESUtil {
         return mapList;
     }
 
+    /**
+     * 根据字段范围（数字、时间）过滤文档
+     * @param index 索引名称
+     * @param type 类型
+     * @param field 字段
+     * @param minObj 最小值
+     * @param maxObj 最大值
+     * @return
+     */
+    public static List<Map<String,Object>> rangeFilter(String index, String type, String field, Object minObj, Object maxObj){
+        TransportClient client = ESPool.getConnect();
+        log.info("-------- range过滤ES中的数据，索引："+index+" 类型："+type+" 字段："+field);
+        QueryBuilder queryBuilder = QueryBuilders.rangeQuery(field).from(minObj).to(maxObj);
+        SearchHits searchHits = client.prepareSearch(index).setTypes(type).setPostFilter(queryBuilder).get().getHits();
+        List<Map<String,Object>> mapList = new ArrayList<Map<String,Object>>() ;
+        for(SearchHit hit : searchHits){
+            mapList.add(hit.getSourceAsMap());
+        }
+        ESPool.closeConnect(client);
+        return mapList;
+    }
+
+    /**
+     * 根据字段是否存在内容过滤文档
+     * @param index 索引名称
+     * @param type 类型
+     * @param field 字段
+     * @return
+     */
+    public static List<Map<String,Object>> existFilter(String index, String type, String field){
+        TransportClient client = ESPool.getConnect();
+        log.info("-------- exist过滤ES中的数据，索引："+index+" 类型："+type+" 字段："+field);
+        QueryBuilder queryBuilder = QueryBuilders.existsQuery(field);
+        SearchHits searchHits = client.prepareSearch(index).setTypes(type).setPostFilter(queryBuilder).get().getHits();
+        List<Map<String,Object>> mapList = new ArrayList<Map<String,Object>>() ;
+        for(SearchHit hit : searchHits){
+            mapList.add(hit.getSourceAsMap());
+        }
+        ESPool.closeConnect(client);
+        return mapList;
+    }
 
 }
