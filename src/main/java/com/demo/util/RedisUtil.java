@@ -42,8 +42,8 @@ public class RedisUtil {
             config.setMaxIdle(MAX_IDLE);
             config.setMaxWaitMillis(MAX_WAIT);
             config.setTestOnBorrow(TEST_ON_BORROW);
-            ADDR = ConfigProperties.getValueByKey("redis.ip");
-            PORT = Integer.parseInt(ConfigProperties.getValueByKey("redis.port"));
+            ADDR = ConfigUtil.getValueByKey("redis.ip");
+            PORT = Integer.parseInt(ConfigUtil.getValueByKey("redis.port"));
             jedisPool = new JedisPool(config, ADDR, PORT, TIMEOUT);
         } catch (Exception e) {
             e.printStackTrace();
